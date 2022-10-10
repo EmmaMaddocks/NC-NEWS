@@ -5,7 +5,6 @@ exports.fetchAllTopics = (req, res, next) => {
     .then((topics) => {
     res.status(200)
     .send(topics);
-       // console.log(topics);
     })
     .catch(next);
 }

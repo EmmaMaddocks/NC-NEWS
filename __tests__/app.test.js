@@ -17,7 +17,6 @@ describe("GET /api/topics endpoint", () => {
       .expect(200)
       .then((response) => {
         topics = response.body;
-        //onsole.log(response.body)
         topics.forEach((topic) => {
           expect(topic).toEqual(
             expect.objectContaining({
@@ -27,9 +26,14 @@ describe("GET /api/topics endpoint", () => {
           );
         });
         expect(topics.length).toEqual(3);
-        expect(topics[0].slug).toEqual("mitch");
       });
   });
+
+  test('Responds with 404 not a path error when passed bad path', () => {
+    return request(app)
+    .get("/api/notapath")
+    .expect(404)
+})
 });
 
 
