@@ -19,5 +19,8 @@ exports.getArticleById = async (article_id) => {
         } return article.rows;
 };
 
-  
-
+  exports.getAllUsers = async () => {
+    const users = await db.query(`
+    SELECT * FROM users;`);
+    return users.rows;
+  }

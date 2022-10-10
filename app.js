@@ -2,7 +2,7 @@
 const { application } = require('express');
 const express = require('express');
 const app = express();
-const { fetchAllTopics, fetchArticleById } = require('./controllers');
+const { fetchAllTopics, fetchArticleById, fetchAllUsers } = require('./controllers');
 
 
 app.use(express.json());
@@ -11,6 +11,7 @@ app.get('/api/topics', fetchAllTopics)
 
 app.get('/api/articles/:article_id', fetchArticleById)
 
+app.get('/api/users', fetchAllUsers)
 
 
 

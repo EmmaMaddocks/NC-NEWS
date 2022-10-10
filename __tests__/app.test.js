@@ -3,6 +3,7 @@ const pool = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data");
 const request = require("supertest");
+const users = require("../db/data/test-data/users");
 
 beforeEach(() => seed(testData));
 
@@ -16,7 +17,7 @@ describe("GET /api/topics endpoint", () => {
       .get("/api/topics")
       .expect(200)
       .then((response) => {
-        topics = response.body;
+        let topics = response.body;
         topics.forEach((topic) => {
           expect(topic).toEqual(
             expect.objectContaining({
@@ -75,8 +76,28 @@ describe("GET /api/articles/:article_id endpoint", () => {
 })
 
 describe('GET /api/users responds with an array of users', () => {
-    test('', () => {
-
+    test('Responds with an array of users', () => {
+        return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((response) => {
+          let users = response.body;
+          users.forEach((user) => {
+            expect(user).toEqual(
+              expect.objectContaining({
+                username: expect.any(String),
+                name: expect.any(String),
+                avatar_url: expect.any(String),
+              })
+            );
+          });
+          expect(users.length).toEqual(4);
+        });
+    });
+    test('Responds with 404 not a path error when passed bad path', () => {
+        return request(app)
+        .get("/api/notapath")
+        .expect(404)
     })
 
 })
