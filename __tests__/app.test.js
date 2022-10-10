@@ -51,4 +51,22 @@ describe("GET /api/articles/:article_id endpoint", () => {
             })
           });
     })
+    test('Responds with an empty object when the id passed is valid but has no article', () => {
+        const article_id = 2292943;
+        return request(app)
+        .get(`/api/articles/${article_id}`)
+        .expect(200)
+        .then((response) => {
+            expect(response.body).toEqual({});
+          });
+    })
+    test('Responds with a 404 error  when the id passed is invalid', () => {
+        return request(app)
+        .get(`/api/articles/notAnId`)
+        .expect(400)
+        .then((response) => {
+            console.log(response.body);
+            expect(response.body).toEqual({"msg": "Bad Request"});
+          });
+    })
 })
