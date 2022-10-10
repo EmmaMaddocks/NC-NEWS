@@ -31,3 +31,24 @@ describe("GET /api/topics endpoint", () => {
       });
   });
 });
+
+
+describe("GET /api/articles/:article_id endpoint", () => {
+    test('Responds with an article object', () => {
+        const article_id = 2;
+        return request(app)
+        .get(`/api/articles/${article_id}`)
+        .expect(200)
+        .then((response) => {
+            expect(response.body).toMatchObject({
+              article_id: article_id,
+              author: expect.any(String),
+              body: expect.any(String),
+              created_at: expect.any(String),
+              title: expect.any(String),
+              topic: expect.any(String),
+              votes: expect.any(Number)
+            })
+          });
+    })
+})

@@ -1,12 +1,18 @@
 // const { application } = require('express');
+const { application } = require('express');
 const express = require('express');
 const app = express();
-const { fetchAllTopics } = require('./controllers');
+const { fetchAllTopics, fetchArticleById } = require('./controllers');
 
 
 app.use(express.json());
 
 app.get('/api/topics', fetchAllTopics)
+
+app.get('/api/articles/:article_id', fetchArticleById)
+
+
+
 
 app.use((err, req, res, next) => {
     if (err.status && err.msg) {
