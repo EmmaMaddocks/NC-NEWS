@@ -42,6 +42,7 @@ describe("GET /api/articles/:article_id endpoint", () => {
       .get(`/api/articles/${article_id}`)
       .expect(200)
       .then(({ body }) => {
+        console.log(body)
         expect(body).toMatchObject({
           article_id: article_id,
           author: expect.any(String),
@@ -50,6 +51,7 @@ describe("GET /api/articles/:article_id endpoint", () => {
           title: expect.any(String),
           topic: expect.any(String),
           votes: expect.any(Number),
+          comment_count: expect.any(String),
         });
       });
   });
