@@ -4,6 +4,7 @@ const {
   convertTimestampToDate,
   createRef,
   formatComments,
+  checkExists,
 } = require('./utils');
 
 const seed = async ({ topicData, userData, articleData, commentData }) => {
