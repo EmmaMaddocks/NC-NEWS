@@ -131,7 +131,7 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(body.votes).toBe(-100);
       });
   });
-});
+
 
 test("404: Returns error message when article ID doesnt exist", () => {
   const article_id = 99999;
@@ -141,5 +141,30 @@ test("404: Returns error message when article ID doesnt exist", () => {
     .expect(404)
     .then(({ body }) => {
       expect(body.message).toBe("Resource not found");
-    });
+    })
+});
+
+
+test("404: Returns error message when invalid inc entered", () => {
+  const article_id = 2;
+  return request(app)
+    .patch(`/api/articles/${article_id}`)
+    .send({ inc_votes: 'ten' })
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.message).toBe('Could not update, please ensure you have entered a vote amount in number format');
+    })
+});
+
+test("400: Returns error message when no inc amount entered", () => {
+  const article_id = 2;
+  return request(app)
+    .patch(`/api/articles/${article_id}`)
+    .send({ inc_votes: '' })
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.message).toBe('Could not update, please ensure you have entered a vote amount in number format');
+    })
+});
+
 });
