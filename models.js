@@ -2,6 +2,7 @@ const { Pool } = require("pg");
 const db = require("./db/connection");
 const format = require("pg-format");
 const { checkExists } = require("./db/seeds/utils");
+const { ident } = require("pg-format");
 
 exports.getAllTopics = async () => {
   const topics = await db.query(`
@@ -10,7 +11,7 @@ exports.getAllTopics = async () => {
 };
 
 exports.getArticleById = async (article_id) => {
-await checkExists("articles", "article_id", article_id);
+  await checkExists("articles", "article_id", article_id);
   const article = await db.query(
     `
     SELECT * FROM articles
@@ -23,8 +24,6 @@ await checkExists("articles", "article_id", article_id);
   return article.rows;
 };
 
-
-
 exports.getAllUsers = async () => {
   const users = await db.query(`
     SELECT * FROM users;`);
@@ -32,7 +31,13 @@ exports.getAllUsers = async () => {
 };
 
 exports.getUpdatedVotes = async (article_id, inc_votes) => {
-    
+  if (!inc_votes || typeof inc_votes !== "number") {
+    return Promise.reject({
+      status: 400,
+      msg: "Could not update, please ensure you have entered a vote amount in number format",
+    });
+  }
+
   const updatedVotes = await db.query(
     `UPDATE articles
       SET votes = votes + $1
@@ -43,5 +48,6 @@ exports.getUpdatedVotes = async (article_id, inc_votes) => {
   if (!updatedVotes.rows[0]) {
     await checkExists("articles", "article_id", article_id);
   }
+
   return updatedVotes.rows[0];
 };
