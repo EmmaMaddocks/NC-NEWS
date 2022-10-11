@@ -1,11 +1,10 @@
-const { getAllTopics, getArticleById } = require('./models')
+const { getAllTopics, getArticleById, getAllUsers, getUpdatedVotes } = require('./models')
 
 exports.fetchAllTopics = (req, res, next) => {
     getAllTopics()
     .then((topics) => {
     res.status(200)
     .send(topics);
-       // console.log(topics);
     })
     .catch(next);
 }
@@ -15,6 +14,25 @@ exports.fetchArticleById = (req, res, next) => {
     getArticleById(article_id)
     .then((article) => {
     res.status(200).send(article[0]);
+    })
+    .catch(next);
+}
+
+exports.fetchAllUsers = (req, res, next) => {
+    getAllUsers()
+    .then((users) => {
+    res.status(200)
+    .send(users);
+    })
+    .catch(next);
+}
+
+exports.fetchUpdatedVotes = (req, res, next) => {
+    const {inc_votes} = req.body;
+    const { article_id } = req.params;
+    getUpdatedVotes(article_id, inc_votes)
+    .then((updatedVotes) => {
+    res.status(200).send(updatedVotes)
     })
     .catch(next);
 }
