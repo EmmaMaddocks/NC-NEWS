@@ -224,7 +224,7 @@ describe("GET /api/articles", () => {
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
-  test('responds with an array of comments for the given article id', () => {
+  test('responds with an array of comments in order of newest-oldest for the given article id', () => {
     const article_id = 1;
     return request(app)
       .get(`/api/articles/${article_id}/comments`)
@@ -241,6 +241,9 @@ describe('GET /api/articles/:article_id/comments', () => {
       })
     })
     expect(comments.length).toEqual(11);
+    expect(comments).toBeSortedBy("created_at", {
+      descending: true,
+    });
     })
   })
 
@@ -262,3 +265,4 @@ describe('GET /api/articles/:article_id/comments', () => {
       });
   });
 })
+
