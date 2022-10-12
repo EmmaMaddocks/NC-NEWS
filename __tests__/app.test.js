@@ -50,7 +50,7 @@ describe("GET /api/articles/:article_id endpoint", () => {
           title: expect.any(String),
           topic: expect.any(String),
           votes: expect.any(Number),
-          comment_count: expect.any(String),
+          comment_count: expect.any(Number),
         });
       });
   });
@@ -96,7 +96,7 @@ describe("GET /api/users responds with an array of users", () => {
   test("Responds with 404 error when passed bad path", () => {
     return request(app)
     .get("/api/notapath")
-    .expect(404)
+    .expect(404);
   });
 });
 
@@ -133,102 +133,132 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 
-
-test("404: Returns error message when article ID doesnt exist", () => {
-  const article_id = 99999;
-  return request(app)
-    .patch(`/api/articles/${article_id}`)
-    .send({ inc_votes: 1 })
-    .expect(404)
-    .then(({ body }) => {
-      expect(body.message).toBe("Resource not found");
-    })
-});
-
-
-test("404: Returns error message when invalid inc entered", () => {
-  const article_id = 2;
-  return request(app)
-    .patch(`/api/articles/${article_id}`)
-    .send({ inc_votes: 'ten' })
-    .expect(400)
-    .then(({ body }) => {
-      expect(body.message).toBe('Could not update, please ensure you have entered a vote amount in number format');
-    })
-});
-
-test("400: Returns error message when no inc amount entered", () => {
-  const article_id = 2;
-  return request(app)
-    .patch(`/api/articles/${article_id}`)
-    .send({ inc_votes: '' })
-    .expect(400)
-    .then(({ body }) => {
-      expect(body.message).toBe('Could not update, please ensure you have entered a vote amount in number format');
-    })
-});
-
-});
-
-
-describe('GET /api/articles', () => {
-  test('responds with an array of articles in descending date order', () => { 
+  test("404: Returns error message when article ID doesnt exist", () => {
+    const article_id = 99999;
     return request(app)
-    .get("/api/articles")
-    .expect(200)
-    .then(({ body }) => {
-      // console.log(body)
-      let articles = body;
-      articles.forEach((article) => {
-        expect(article).toEqual(
-          expect.objectContaining({
-            article_id: expect.any(Number),
-            author: expect.any(String),
-            body: expect.any(String),
-            created_at: expect.any(String),
-            title: expect.any(String),
-            topic: expect.any(String),
-            votes: expect.any(Number),
-            comment_count: expect.any(String),
-          })
+      .patch(`/api/articles/${article_id}`)
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("Resource not found");
+      });
+  });
+
+  test("404: Returns error message when invalid inc entered", () => {
+    const article_id = 2;
+    return request(app)
+      .patch(`/api/articles/${article_id}`)
+      .send({ inc_votes: "ten" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe(
+          "Could not update, please ensure you have entered a vote amount in number format"
         );
       });
-      expect(articles.length).toEqual(12);
-      expect(articles).toBeSortedBy('created_at', {
-        descending: true,
+  });
+
+  test("400: Returns error message when no inc amount entered", () => {
+    const article_id = 2;
+    return request(app)
+      .patch(`/api/articles/${article_id}`)
+      .send({ inc_votes: "" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toBe(
+          "Could not update, please ensure you have entered a vote amount in number format"
+        );
       });
-    });
+  });
+});
+
+describe("GET /api/articles", () => {
+  test("responds with an array of articles in descending date order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        let articles = body;
+        articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              article_id: expect.any(Number),
+              author: expect.any(String),
+              body: expect.any(String),
+              created_at: expect.any(String),
+              title: expect.any(String),
+              topic: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
+        expect(articles.length).toEqual(12);
+        expect(articles).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
   });
 
   test("200 allows client to filter by topic", () => {
     return request(app)
-      .get('/api/articles?topic=mitch')
+      .get("/api/articles?topic=mitch")
       .expect(200)
-      .then(({body}) => {
+      .then(({ body }) => {
         let articles = body;
-            expect(articles.length).toEqual(11);
-            articles.forEach((article) => {
-              expect(article.topic).toBe('mitch');
-                })
-  });
+        expect(articles.length).toEqual(11);
+        articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
         });
+      });
+  });
 
-        test("404 error no resources found when no articles for requested topic", () => {
-          return request(app)
-            .get('/api/articles?topic=dogs')
-            .expect(404)
-            .then(({ body }) => {
-              expect(body.message).toBe("Resource not found");
-            })
-              });
+  test("404 error no resources found when no articles for requested topic", () => {
+    return request(app)
+      .get("/api/articles?topic=dogs")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("Resource not found");
+      });
+  });
 
-
-        test("404 error no resources found when no articles for requested topic", () => {
-          return request(app)
-            .get('/api/articles?topic=')
-            .expect(404)
-            .then(({ body }) => {
-              expect(body.message).toBe("Resource not found");
-            })
-              });
 });
+
+describe('GET /api/articles/:article_id/comments', () => {
+  test('responds with an array of comments for the given article id', () => {
+    const article_id = 1;
+    return request(app)
+      .get(`/api/articles/${article_id}/comments`)
+      .expect(200)
+    .then(({ body}) => {
+      let comments = body;
+      comments.forEach((comment) => {
+        expect.objectContaining({
+          body: expect.any(String),
+          votes: expect.any(String),
+          author: expect.any(String),
+          article_id: expect.any(Number),
+          created_at: expect.any(Number),
+      })
+    })
+    expect(comments.length).toEqual(11);
+    })
+  })
+
+  test("Responds with a 400 error when the id passed is invalid", () => {
+    return request(app)
+      .get(`/api/articles/notAnId/comments`)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toEqual({ msg: "Bad Request" });
+      });
+  });
+
+  test("Responds with a 404 error when the id passed is valid but no article", () => {
+    return request(app)
+      .get(`/api/articles/49532/comments`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toEqual("Resource not found");
+      });
+  });
+})

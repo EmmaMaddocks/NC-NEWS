@@ -15,7 +15,7 @@ exports.getArticleById = async (article_id) => {
   const article = await db.query(
     `
     SELECT articles.*,
-    COUNT(comments.article_id)
+    COUNT(comments.article_id)::INT
     AS comment_count
     FROM articles
     LEFT JOIN comments
@@ -58,15 +58,11 @@ exports.getUpdatedVotes = async (article_id, inc_votes) => {
 };
 
 
-
-
-
-
 exports.getAllArticles = async (topic) => {
 
     let baseQuery = `
     SELECT articles.*,
-    COUNT(comments.article_id)
+    COUNT(comments.article_id)::INT
     AS comment_count
     FROM articles
     LEFT JOIN comments
@@ -89,5 +85,13 @@ if (articles.rows.length === 0) {
   return articles.rows;
 };
 
+exports.getAllComments = async (article_id) => {
+await checkExists("articles", "article_id", article_id);
+const comments = await db.query(`
+SELECT *
+FROM comments
+WHERE article_id = ${article_id};`)
 
+return comments.rows;
 
+}
