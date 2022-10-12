@@ -14,10 +14,15 @@ exports.getArticleById = async (article_id) => {
   await checkExists("articles", "article_id", article_id);
   const article = await db.query(
     `
-    SELECT * FROM articles
-    WHERE article_id = $1`,
-    [article_id]
-  );
+    SELECT articles.*,
+    COUNT(comments.article_id)
+    AS comment_count
+    FROM articles
+    LEFT JOIN comments
+    ON comments.article_id = articles.article_id
+    WHERE articles.article_id = $1
+    GROUP BY articles.article_id;
+    `, [article_id]);
   if (!article.rows) {
     await checkExists("articles", "article_id", article_id);
   }
@@ -51,3 +56,38 @@ exports.getUpdatedVotes = async (article_id, inc_votes) => {
 
   return updatedVotes.rows[0];
 };
+
+
+
+
+
+
+exports.getAllArticles = async (topic) => {
+
+    let baseQuery = `
+    SELECT articles.*,
+    COUNT(comments.article_id)
+    AS comment_count
+    FROM articles
+    LEFT JOIN comments
+    ON comments.article_id = articles.article_id
+    `;
+   
+if(topic) {
+    baseQuery += `  WHERE topic = '${topic}'
+    GROUP BY articles.article_id
+    ORDER BY articles.created_at DESC;`
+} else if (!topic) {
+    baseQuery += `  GROUP BY articles.article_id
+    ORDER BY articles.created_at DESC;`
+}
+
+const articles = await db.query(baseQuery);
+if (articles.rows.length === 0) {
+    await checkExists("articles", "topic", topic);
+  }
+  return articles.rows;
+};
+
+
+
