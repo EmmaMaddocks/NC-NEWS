@@ -1,4 +1,4 @@
-const { getAllTopics, getArticleById, getAllUsers, getUpdatedVotes } = require('./models')
+const { getAllTopics, getArticleById, getAllUsers, getUpdatedVotes, getAllArticles } = require('./models')
 
 exports.fetchAllTopics = (req, res, next) => {
     getAllTopics()
@@ -33,6 +33,16 @@ exports.fetchUpdatedVotes = (req, res, next) => {
     getUpdatedVotes(article_id, inc_votes)
     .then((updatedVotes) => {
     res.status(200).send(updatedVotes)
+    })
+    .catch(next);
+}
+
+exports.fetchAllArticles = (req, res, next) => {
+    const { topic } = req.query;
+
+    getAllArticles(topic)
+    .then((result) => {
+    res.status(200).send(result);
     })
     .catch(next);
 }
