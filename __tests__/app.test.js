@@ -81,6 +81,7 @@ describe("GET /api/users responds with an array of users", () => {
       .expect(200)
       .then(({ body }) => {
         let users = body;
+        expect(users.length).toEqual(4);
         users.forEach((user) => {
           expect(user).toEqual(
             expect.objectContaining({
@@ -90,7 +91,6 @@ describe("GET /api/users responds with an array of users", () => {
             })
           );
         });
-        expect(users.length).toEqual(4);
       });
   });
   test("Responds with 404 error when passed bad path", () => {
@@ -177,8 +177,8 @@ describe('GET /api/articles', () => {
     .get("/api/articles")
     .expect(200)
     .then(({ body }) => {
-      // console.log(body)
       let articles = body;
+      expect(articles.length).toEqual(12);
       articles.forEach((article) => {
         expect(article).toEqual(
           expect.objectContaining({
@@ -193,7 +193,6 @@ describe('GET /api/articles', () => {
           })
         );
       });
-      expect(articles.length).toEqual(12);
       expect(articles).toBeSortedBy('created_at', {
         descending: true,
       });
@@ -223,12 +222,5 @@ describe('GET /api/articles', () => {
               });
 
 
-        test("404 error no resources found when no articles for requested topic", () => {
-          return request(app)
-            .get('/api/articles?topic=')
-            .expect(404)
-            .then(({ body }) => {
-              expect(body.message).toBe("Resource not found");
-            })
-              });
+
 });
