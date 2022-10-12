@@ -36,8 +36,7 @@
     "pg": "^8.8.0"
   },
   "jest": {
-    "setupFilesAfterEnv": [
-      "jest-sorted"
-    ]
+    "setupFilesAfterEnv": 
+      ["./testSetup.js"]
   }
 }

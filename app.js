@@ -2,7 +2,7 @@
 const { application } = require('express');
 const express = require('express');
 const app = express();
-const { fetchAllTopics, fetchArticleById, fetchUpdatedVotes, fetchAllUsers, fetchAllArticles } = require('./controllers');
+const { fetchAllTopics, fetchArticleById, fetchUpdatedVotes, fetchAllUsers, fetchAllArticles, fetchComments } = require('./controllers');
 const { getAllArticles } = require('./models');
 
 
@@ -17,6 +17,8 @@ app.get('/api/articles/:article_id', fetchArticleById)
 app.get('/api/users', fetchAllUsers)
 
 app.patch('/api/articles/:article_id', fetchUpdatedVotes)
+
+app.get('/api/articles/:article_id/comments', fetchComments)
 
 
 app.use((err, req, res, next) => {
