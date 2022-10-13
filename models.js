@@ -95,26 +95,13 @@ ORDER BY created_at DESC;`);
   return comments.rows;
 };
 
-exports.publishComment = async (id, newComment) => {
-  const { username, body } = newComment;
-
-  if (body !== undefined && username !== undefined) {
-    return db
-      .query(
-        `
-        INSERT INTO comments
-        (author, body, article_id)
-        VALUES ($1, $2, $3)
-        RETURNING *;`,
-        [username, body, id]
-      )
-      .then((result) => {
-        return result.rows[0];
-      });
-  } else {
-    return Promise.reject({
-      status: 400,
-      msg: "Please ensure valid body and username are entered",
-    });
-  }
+exports.publishComment = async (author, body, id) => {
+  const comment = await db
+    .query(
+      `INSERT INTO comments (author, body, article_id)
+      VALUES ($1, $2, $3)
+      RETURNING *;`,
+      [author, body, id]
+    )
+      return comment.rows[0];
 };

@@ -263,7 +263,7 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-describe.only("POST /api/articles/:article_id/comments", () => {
+describe("POST /api/articles/:article_id/comments", () => {
   test("Request body takes a user and body and returns the posted comment", () => {
     const newComment = {
       username: "icellusedkars",
@@ -291,26 +291,27 @@ describe.only("POST /api/articles/:article_id/comments", () => {
     };
     return request(app)
       .post("/api/articles/2/comments")
+      .send(newComment)
       .expect(400)
       .then(({ body }) => {
-        console.log(body.message);
         expect(body.message).toEqual(
-          "Please ensure valid body and username are entered"
+          "Please enter a comment"
         );
       });
   });
 
-  test("400 - username does not exist", () => {
+  test("404 - username does not exist", () => {
     const newComment = {
       username: "emmaMadd",
-      body: "This is an amazing comment.",
+      body: "This is an amazing comment."
     };
     return request(app)
       .post("/api/articles/2/comments")
-      .expect(400)
+      .send(newComment)
+      .expect(404)
       .then(({ body }) => {
         expect(body.message).toEqual(
-          "Please ensure valid body and username are entered"
+          "User not found"
         );
       });
   });

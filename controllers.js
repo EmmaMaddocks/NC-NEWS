@@ -8,6 +8,8 @@ const {
   publishComment,
 } = require("./models");
 
+const { checkExists } = require("./db/seeds/utils");
+
 exports.fetchAllTopics = (req, res, next) => {
   getAllTopics()
     .then((topics) => {
@@ -64,14 +66,20 @@ exports.fetchComments = (req, res, next) => {
 };
 
 exports.postComment = (req, res, next) => {
-  const { article_id } = req.params;
-  const newComment = req.body;
-  getArticleById(article_id)
-    .then(() => {
-      return publishComment(article_id, newComment);
-    })
-    .then((comment) => {
-      res.status(201).send(comment);
-    })
-    .catch(next);
-};
+    const { username } = req.body;
+    const { body } = req.body;
+    const { article_id } = req.params;
+  
+    checkExists("users", "username", username)
+      .then(() => {
+        if (body === "" || !body) {
+          return Promise.reject({ status: 400, msg: "Please enter a comment" });
+        }
+      })
+      .then(() => {
+        publishComment(username, body, article_id).then((comment) => {
+          res.status(201).send(comment);
+        });
+      })
+      .catch(next);
+  };
