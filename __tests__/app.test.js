@@ -94,9 +94,7 @@ describe("GET /api/users responds with an array of users", () => {
       });
   });
   test("Responds with 404 error when passed bad path", () => {
-    return request(app)
-    .get("/api/notapath")
-    .expect(404);
+    return request(app).get("/api/notapath").expect(404);
   });
 });
 
@@ -171,33 +169,32 @@ describe("PATCH /api/articles/:article_id", () => {
   });
 });
 
-
-describe('GET /api/articles', () => {
-  test('responds with an array of articles in descending date order', () => { 
+describe("GET /api/articles", () => {
+  test("responds with an array of articles in descending date order", () => {
     return request(app)
-    .get("/api/articles")
-    .expect(200)
-    .then(({ body }) => {
-      let articles = body;
-      expect(articles.length).toEqual(12);
-      articles.forEach((article) => {
-        expect(article).toEqual(
-          expect.objectContaining({
-            article_id: expect.any(Number),
-            author: expect.any(String),
-            body: expect.any(String),
-            created_at: expect.any(String),
-            title: expect.any(String),
-            topic: expect.any(String),
-            votes: expect.any(Number),
-            comment_count: expect.any(Number),
-          })
-        );
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        let articles = body;
+        expect(articles.length).toEqual(12);
+        articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              article_id: expect.any(Number),
+              author: expect.any(String),
+              body: expect.any(String),
+              created_at: expect.any(String),
+              title: expect.any(String),
+              topic: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
+        expect(articles).toBeSortedBy("created_at", {
+          descending: true,
+        });
       });
-      expect(articles).toBeSortedBy('created_at', {
-        descending: true,
-      });
-    });
   });
 
   test("200 allows client to filter by topic", () => {
@@ -221,32 +218,31 @@ describe('GET /api/articles', () => {
         expect(body.message).toBe("Resource not found");
       });
   });
-
 });
 
-describe('GET /api/articles/:article_id/comments', () => {
-  test('responds with an array of comments in order of newest-oldest for the given article id', () => {
+describe("GET /api/articles/:article_id/comments", () => {
+  test("responds with an array of comments in order of newest-oldest for the given article id", () => {
     const article_id = 1;
     return request(app)
       .get(`/api/articles/${article_id}/comments`)
       .expect(200)
-    .then(({ body}) => {
-      let comments = body;
-      comments.forEach((comment) => {
-        expect.objectContaining({
-          body: expect.any(String),
-          votes: expect.any(String),
-          author: expect.any(String),
-          article_id: expect.any(Number),
-          created_at: expect.any(Number),
-      })
-    })
-    expect(comments.length).toEqual(11);
-    expect(comments).toBeSortedBy("created_at", {
-      descending: true,
-    });
-    })
-  })
+      .then(({ body }) => {
+        let comments = body;
+        comments.forEach((comment) => {
+          expect.objectContaining({
+            body: expect.any(String),
+            votes: expect.any(String),
+            author: expect.any(String),
+            article_id: expect.any(Number),
+            created_at: expect.any(Number),
+          });
+        });
+        expect(comments.length).toEqual(11);
+        expect(comments).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
 
   test("Responds with a 400 error when the id passed is invalid", () => {
     return request(app)
@@ -265,5 +261,58 @@ describe('GET /api/articles/:article_id/comments', () => {
         expect(body.message).toEqual("Resource not found");
       });
   });
-})
+});
 
+describe("POST /api/articles/:article_id/comments", () => {
+  test("Request body takes a user and body and returns the posted comment", () => {
+    const newComment = {
+      username: "icellusedkars",
+      body: "This is an amazing comment.",
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body).toEqual({
+          comment_id: 19,
+          body: "This is an amazing comment.",
+          article_id: 2,
+          author: "icellusedkars",
+          votes: 0,
+          created_at: expect.any(String),
+        });
+      });
+  });
+
+  test("400 - missing required fields", () => {
+    const newComment = {
+      username: "icellusedkars",
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.message).toEqual(
+          "Please enter a comment"
+        );
+      });
+  });
+
+  test("404 - username does not exist", () => {
+    const newComment = {
+      username: "emmaMadd",
+      body: "This is an amazing comment."
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toEqual(
+          "User not found"
+        );
+      });
+  });
+});

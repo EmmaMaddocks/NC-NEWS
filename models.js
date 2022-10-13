@@ -94,3 +94,14 @@ WHERE article_id = ${article_id}
 ORDER BY created_at DESC;`);
   return comments.rows;
 };
+
+exports.publishComment = async (author, body, id) => {
+  const comment = await db
+    .query(
+      `INSERT INTO comments (author, body, article_id)
+      VALUES ($1, $2, $3)
+      RETURNING *;`,
+      [author, body, id]
+    )
+      return comment.rows[0];
+};

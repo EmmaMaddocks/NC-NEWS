@@ -25,11 +25,26 @@ exports.formatComments = (comments, idLookup) => {
 };
 
 
-exports.checkExists = async (table, column, value) => {
-  const queryStr = format('SELECT * FROM %I WHERE %I = $1;', table, column);
-  const dbOutput = await db.query(queryStr, [value]);
+exports.checkExists = async (table, params, value) => {
+  if (!table || !params || !value) {
+    return Promise.reject({ status: 400, msg: "Request is missing info" });
+  }
+  const queryStr = format("SELECT * FROM %I WHERE %I = $1", table, params);
+  const dbResult = await db.query(queryStr, [value]);
 
-  if (dbOutput.rows.length === 0) {
-    return Promise.reject({ status: 404, msg: 'Resource not found' });
+  if (dbResult.rows.length === 0) {
+    let message = "";
+    switch (table) {
+      case "articles":
+        message = "Resource not found";
+        break;
+      case "users":
+        message = "User not found";
+        break;
+      case "topics":
+        message = "Topic not found";
+        break;
+    }
+    return Promise.reject({ status: 404, msg: message });
   }
 };
