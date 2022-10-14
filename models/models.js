@@ -1,9 +1,8 @@
 const { Pool } = require("pg");
-const db = require("./db/connection");
-const format = require("pg-format");
-const { checkExists, checkColumnExists } = require("./db/seeds/utils");
-const { ident } = require("pg-format");
-const e = require("express");
+const db = require("../db/connection");
+const { checkExists } = require("../db/seeds/utils");
+
+
 
 exports.getAllTopics = async () => {
   const topics = await db.query(`
