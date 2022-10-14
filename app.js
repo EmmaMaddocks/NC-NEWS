@@ -10,8 +10,9 @@ const {
   fetchAllArticles,
   fetchComments,
   postComment,
-  deleteComment
+  deleteComment,
 } = require("./controllers");
+const { getApi } = require('./api_controller.js')
 
 app.use(express.json());
 
@@ -30,6 +31,8 @@ app.get("/api/articles/:article_id/comments", fetchComments);
 app.post("/api/articles/:article_id/comments", postComment);
 
 app.delete("/api/comments/:comment_id", deleteComment);
+
+app.get("/api", getApi);
 
 
 

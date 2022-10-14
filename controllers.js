@@ -51,7 +51,6 @@ exports.fetchAllArticles = (req, res, next) => {
 
   getAllArticles(topic, sort_by, order)
     .then((result) => {
-        console.log(result)
       res.status(200).send(result);
     })
     .catch(next);
