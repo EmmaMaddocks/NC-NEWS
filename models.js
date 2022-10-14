@@ -1,8 +1,9 @@
 const { Pool } = require("pg");
 const db = require("./db/connection");
 const format = require("pg-format");
-const { checkExists } = require("./db/seeds/utils");
+const { checkExists, checkColumnExists } = require("./db/seeds/utils");
 const { ident } = require("pg-format");
+const e = require("express");
 
 exports.getAllTopics = async () => {
   const topics = await db.query(`
@@ -59,9 +60,40 @@ exports.getUpdatedVotes = async (article_id, inc_votes) => {
   return updatedVotes.rows[0];
 };
 
-exports.getAllArticles = async (topic) => {
+exports.getAllArticles = async (topic, sort_by = "created_at", order = "DESC") => {
+  const validInputs = [
+    "title",
+    "topic",
+    "author",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+
+  if (!validInputs.includes(sort_by)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid sort query",
+    });
+  }
+
+  if (!["ASC", "DESC"].includes(order)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid order query",
+    });
+  }
+
+  const query = [];
+
   let baseQuery = `
-    SELECT articles.*,
+    SELECT 
+    articles.article_id,
+    articles.title,
+    articles.author,
+    articles.created_at,
+    articles.topic,
+    articles.votes,
     COUNT(comments.article_id)::INT
     AS comment_count
     FROM articles
@@ -70,20 +102,23 @@ exports.getAllArticles = async (topic) => {
     `;
 
   if (topic) {
-    baseQuery += `  WHERE topic = '${topic}'
-    GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;`;
-  } else if (!topic) {
-    baseQuery += `  GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;`;
+    query.push(topic);
+    baseQuery += `  WHERE topic = $1`;
   }
 
-  const articles = await db.query(baseQuery);
-  if (articles.rows.length === 0) {
-    await checkExists("articles", "topic", topic);
+  baseQuery += `
+    GROUP BY articles.article_id
+    ORDER BY ${sort_by} ${order};`;
+
+  const sortedArticles = await db.query(baseQuery, [...query]);
+  if (!sortedArticles.rows.length) {
+    return checkExists("topics", "slug", topic).then(() => {
+      return sortedArticles.rows;
+    });
   }
-  return articles.rows;
+  return sortedArticles.rows;
 };
+
 
 exports.getAllComments = async (article_id) => {
   await checkExists("articles", "article_id", article_id);
@@ -96,14 +131,13 @@ ORDER BY created_at DESC;`);
 };
 
 exports.publishComment = async (author, body, id) => {
-  const comment = await db
-    .query(
-      `INSERT INTO comments (author, body, article_id)
+  const comment = await db.query(
+    `INSERT INTO comments (author, body, article_id)
       VALUES ($1, $2, $3)
       RETURNING *;`,
-      [author, body, id]
-    )
-      return comment.rows[0];
+    [author, body, id]
+  );
+  return comment.rows[0];
 };
 
 exports.removeComment = (comment_id) => {
