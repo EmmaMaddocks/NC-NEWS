@@ -7,9 +7,9 @@ const {
   getAllComments,
   publishComment,
   removeComment
-} = require("./models");
+} = require("../models/models");
 
-const { checkExists } = require("./db/seeds/utils");
+const { checkExists } = require("../db/seeds/utils");
 
 exports.fetchAllTopics = (req, res, next) => {
   getAllTopics()

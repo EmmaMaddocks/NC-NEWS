@@ -11,8 +11,8 @@ const {
   fetchComments,
   postComment,
   deleteComment,
-} = require("./controllers");
-const { getApi } = require('./api_controller.js')
+} = require("./controllers/controllers");
+const { getApi } = require('./controllers/api_controller.js')
 
 app.use(express.json());
 
