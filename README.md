@@ -6,11 +6,10 @@ An API for the purpose of accessing application data programmatically. The inten
 
 ## Cloning this project and running it locally
 
-To clone this project and run it locally, you will need to create two .env files: `.env.test` and `.env.development`. 
+To clone this project and run it locally, you will need to create two .env files: `.env.test` and `.env.development`.
 
 Into env.test, add `PGDATABASE=nc_news_test`.
 
 Into env.delelopment, add `PGDATABASE=nc_news`.
 
 This will enable you to connect to the two databases locally.
-

@@ -1,41 +1,25 @@
-const { Pool } = require("pg");
-const db = require("./db/connection");
-const format = require("pg-format");
-const { checkExists, checkColumnExists } = require("./db/seeds/utils");
-const { ident } = require("pg-format");
-const e = require("express");
-
-exports.getAllTopics = async () => {
-  const topics = await db.query(`
-    SELECT * FROM topics;`);
-  return topics.rows;
-};
+const db = require("../db/connection");
+const { checkExists } = require("../db/seeds/utils");
 
 exports.getArticleById = async (article_id) => {
   await checkExists("articles", "article_id", article_id);
   const article = await db.query(
     `
-    SELECT articles.*,
-    COUNT(comments.article_id)::INT
-    AS comment_count
-    FROM articles
-    LEFT JOIN comments
-    ON comments.article_id = articles.article_id
-    WHERE articles.article_id = $1
-    GROUP BY articles.article_id;
-    `,
+      SELECT articles.*,
+      COUNT(comments.article_id)::INT
+      AS comment_count
+      FROM articles
+      LEFT JOIN comments
+      ON comments.article_id = articles.article_id
+      WHERE articles.article_id = $1
+      GROUP BY articles.article_id;
+      `,
     [article_id]
   );
   if (!article.rows) {
     await checkExists("articles", "article_id", article_id);
   }
   return article.rows;
-};
-
-exports.getAllUsers = async () => {
-  const users = await db.query(`
-    SELECT * FROM users;`);
-  return users.rows;
 };
 
 exports.getUpdatedVotes = async (article_id, inc_votes) => {
@@ -48,9 +32,9 @@ exports.getUpdatedVotes = async (article_id, inc_votes) => {
 
   const updatedVotes = await db.query(
     `UPDATE articles
-      SET votes = votes + $1
-      WHERE article_id = $2
-      RETURNING *;`,
+        SET votes = votes + $1
+        WHERE article_id = $2
+        RETURNING *;`,
     [inc_votes, article_id]
   );
   if (!updatedVotes.rows[0]) {
@@ -60,7 +44,11 @@ exports.getUpdatedVotes = async (article_id, inc_votes) => {
   return updatedVotes.rows[0];
 };
 
-exports.getAllArticles = async (topic, sort_by = "created_at", order = "DESC") => {
+exports.getAllArticles = async (
+  topic,
+  sort_by = "created_at",
+  order = "DESC"
+) => {
   const validInputs = [
     "title",
     "topic",
@@ -87,19 +75,19 @@ exports.getAllArticles = async (topic, sort_by = "created_at", order = "DESC") =
   const query = [];
 
   let baseQuery = `
-    SELECT 
-    articles.article_id,
-    articles.title,
-    articles.author,
-    articles.created_at,
-    articles.topic,
-    articles.votes,
-    COUNT(comments.article_id)::INT
-    AS comment_count
-    FROM articles
-    LEFT JOIN comments
-    ON comments.article_id = articles.article_id
-    `;
+      SELECT 
+      articles.article_id,
+      articles.title,
+      articles.author,
+      articles.created_at,
+      articles.topic,
+      articles.votes,
+      COUNT(comments.article_id)::INT
+      AS comment_count
+      FROM articles
+      LEFT JOIN comments
+      ON comments.article_id = articles.article_id
+      `;
 
   if (topic) {
     query.push(topic);
@@ -107,8 +95,8 @@ exports.getAllArticles = async (topic, sort_by = "created_at", order = "DESC") =
   }
 
   baseQuery += `
-    GROUP BY articles.article_id
-    ORDER BY ${sort_by} ${order};`;
+      GROUP BY articles.article_id
+      ORDER BY ${sort_by} ${order};`;
 
   const sortedArticles = await db.query(baseQuery, [...query]);
   if (!sortedArticles.rows.length) {
@@ -119,38 +107,22 @@ exports.getAllArticles = async (topic, sort_by = "created_at", order = "DESC") =
   return sortedArticles.rows;
 };
 
-
 exports.getAllComments = async (article_id) => {
   await checkExists("articles", "article_id", article_id);
   const comments = await db.query(`
-SELECT *
-FROM comments
-WHERE article_id = ${article_id}
-ORDER BY created_at DESC;`);
+  SELECT *
+  FROM comments
+  WHERE article_id = ${article_id}
+  ORDER BY created_at DESC;`);
   return comments.rows;
 };
 
 exports.publishComment = async (author, body, id) => {
   const comment = await db.query(
     `INSERT INTO comments (author, body, article_id)
-      VALUES ($1, $2, $3)
-      RETURNING *;`,
+        VALUES ($1, $2, $3)
+        RETURNING *;`,
     [author, body, id]
   );
   return comment.rows[0];
-};
-
-exports.removeComment = (comment_id) => {
-	return db
-		.query(
-			`DELETE FROM comments
-		    WHERE comment_id = $1;`,
-			[comment_id]
-		)
-		.then((results) => {
-			if (!results.rowCount) {
-				return checkExists('comments', 'comment_id', comment_id);
-			}
-            return results.rows;
-		});
 };
