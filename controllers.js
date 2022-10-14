@@ -6,6 +6,7 @@ const {
   getAllArticles,
   getAllComments,
   publishComment,
+  removeComment
 } = require("./models");
 
 const { checkExists } = require("./db/seeds/utils");
@@ -83,3 +84,13 @@ exports.postComment = (req, res, next) => {
       })
       .catch(next);
   };
+
+  exports.deleteComment = (req, res, next) => {
+    const { comment_id } = req.params;
+
+    removeComment(comment_id)
+    .then(() => {
+      res.sendStatus(204)
+    })
+    .catch(next);
+  }

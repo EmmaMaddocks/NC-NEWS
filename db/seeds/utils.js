@@ -29,6 +29,7 @@ exports.checkExists = async (table, params, value) => {
   if (!table || !params || !value) {
     return Promise.reject({ status: 400, msg: "Request is missing info" });
   }
+
   const queryStr = format("SELECT * FROM %I WHERE %I = $1", table, params);
   const dbResult = await db.query(queryStr, [value]);
 
@@ -44,7 +45,11 @@ exports.checkExists = async (table, params, value) => {
       case "topics":
         message = "Topic not found";
         break;
+      case "comments":
+          message = "Comment not found";
+          break;
     }
     return Promise.reject({ status: 404, msg: message });
   }
+
 };

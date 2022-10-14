@@ -10,8 +10,8 @@ const {
   fetchAllArticles,
   fetchComments,
   postComment,
+  deleteComment
 } = require("./controllers");
-const { getAllArticles } = require("./models");
 
 app.use(express.json());
 
@@ -28,6 +28,10 @@ app.patch("/api/articles/:article_id", fetchUpdatedVotes);
 app.get("/api/articles/:article_id/comments", fetchComments);
 
 app.post("/api/articles/:article_id/comments", postComment);
+
+app.delete("/api/comments/:comment_id", deleteComment);
+
+
 
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {

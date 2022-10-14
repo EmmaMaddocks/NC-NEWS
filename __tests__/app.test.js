@@ -316,3 +316,30 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+
+describe('/api/comments/:comment_id', () => {
+		test('204: deletes comment associated with passed comment_id and returns no content', () => {
+			return request(app)
+      .delete('/api/comments/1')
+      .expect(204);
+		});
+
+		test('404 Comment not found when passed an ID that is valid but doesnt exist', () => {
+			return request(app)
+      .delete("/api/comments/9000")
+      .expect(404)
+      .then(({body}) => {
+        expect(body.message).toBe("Comment not found");
+      });
+		});
+
+		test('400 Bad request if an invalid comment_id is passed', () => {
+			return request(app)
+				.delete('/api/comments/notAValidID')
+				.expect(400)
+				.then(({body}) => {
+					expect(body.msg).toBe('Bad Request');
+				});
+});
+});
