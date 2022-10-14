@@ -182,7 +182,6 @@ describe("GET /api/articles", () => {
             expect.objectContaining({
               article_id: expect.any(Number),
               author: expect.any(String),
-              body: expect.any(String),
               created_at: expect.any(String),
               title: expect.any(String),
               topic: expect.any(String),
@@ -197,28 +196,47 @@ describe("GET /api/articles", () => {
       });
   });
 
-  test("200 allows client to filter by topic", () => {
+  test("200 allows client to filter by topic and sort by a specific column in chosen order", () => {
     return request(app)
-      .get("/api/articles?topic=mitch")
+      .get("/api/articles?topic=mitch&sort_by=votes&order=ASC")
       .expect(200)
       .then(({ body }) => {
         let articles = body;
         expect(articles.length).toEqual(11);
+        expect(articles).toBeSortedBy("votes", {
+          ascending: true,
+        });
         articles.forEach((article) => {
           expect(article.topic).toBe("mitch");
         });
       });
   });
 
-  test("404 error no resources found when no articles for requested topic", () => {
+  
+  test("404 'topic not found' when no articles for requested topic", () => {
     return request(app)
       .get("/api/articles?topic=dogs")
       .expect(404)
       .then(({ body }) => {
-        expect(body.message).toBe("Resource not found");
+        expect(body.message).toBe("Topic not found");
       });
   });
+
+  test("400 'Invalid sort query' if sort_by column doesn't exist", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch&sort_by=invalid")
+      .expect(400)
+      .then(({body}) => {
+        expect(body.message).toBe("Invalid sort query");
+      });
+  });
+  
 });
+
+
+
+
+
 
 describe("GET /api/articles/:article_id/comments", () => {
   test("responds with an array of comments in order of newest-oldest for the given article id", () => {
@@ -316,3 +334,5 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+
