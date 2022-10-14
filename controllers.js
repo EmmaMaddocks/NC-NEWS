@@ -46,10 +46,11 @@ exports.fetchUpdatedVotes = (req, res, next) => {
 };
 
 exports.fetchAllArticles = (req, res, next) => {
-  const { topic } = req.query;
+  const { topic, sort_by, order } = req.query;
 
-  getAllArticles(topic)
+  getAllArticles(topic, sort_by, order)
     .then((result) => {
+        console.log(result)
       res.status(200).send(result);
     })
     .catch(next);
