@@ -139,3 +139,18 @@ exports.publishComment = async (author, body, id) => {
   );
   return comment.rows[0];
 };
+
+exports.removeComment = (comment_id) => {
+	return db
+		.query(
+			`DELETE FROM comments
+		    WHERE comment_id = $1;`,
+			[comment_id]
+		)
+		.then((results) => {
+			if (!results.rowCount) {
+				return checkExists('comments', 'comment_id', comment_id);
+			}
+            return results.rows;
+		});
+};
