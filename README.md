@@ -1,29 +1,78 @@
 # Northcoders News API
 
+
 ## Background
+#
 
 NC-NEWS is API for the purpose of accessing application data programmatically. The intention is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
 
-## Link to hosted version:
+#
+
+## Links to hosted version:
+#
+
+Heroku currently hosts this project; the link below will take you to a list of all the available endpoints in JSON format.
 
 https:/em-nc-news.herokuapp.com/api
 
+
+## Prerequisites
+#
+Node.js v.16 and PostgreSQL v.14 or greater are needed as a minumum to ensure the project runs as intended.
+
+
+<br><br>
+
+## Set up and Installation
 #
 
-## Intructions
-#
+### To run this project on your local machine, please firstly clone the following repository:
 
-### To clone this project
+https://github.com/EmmaMaddocks/NC-NEWS.git
+<br>
+<br>
 
-$ git clone https://github.com/EmmaMaddocks/NC-NEWS.git
-#
+### You will then need to complete the following steps:
+<br>
+
+### Install Dependencies
+
+    $ npm install
+    
+<br>
 
 ### To run this project locally
 
-To clone this project and run it locally, you will need to create two .env files: `.env.test` and `.env.development`.
 
-Into env.test, copy and paste `PGDATABASE=nc_news_test`.
+You will then need to create two .env files: 
+`.env.test`
+`.env.development`
 
-Into env.delelopment, copy and past `PGDATABASE=nc_news`.
+Into env.test, you will need to copy and paste `PGDATABASE=nc_news_test`.
+
+Into env.delelopment, you will need to copy and paste `PGDATABASE=nc_news`.
+<br>
 
 This will enable you to connect to the two databases locally.
+
+  <br>
+  
+### To Seed the Database
+
+    $ npm run setup-dbs
+    $ npm run seed
+
+  <br>
+  
+### To Run the Entire Test Suite
+
+    $ npm test
+    
+
+<br>
+
+### To Run the App Test Suite
+
+    $ npm test app.test.js
+
+#
