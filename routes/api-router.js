@@ -5,7 +5,7 @@ const topicsRouter = require("./topics-router")
 const articlesRouter = require("./articles-router");
 const commentsRouter = require('./comments-router')
 const usersRouter = require("./users-router")
-const { getOverview } = require('../controllers/api-controller')
+const { getApi } = require('../controllers/api-controller')
 
 apiRouter.use("/topics", topicsRouter)
 apiRouter.use("/articles", articlesRouter)
@@ -14,7 +14,7 @@ apiRouter.use("/users", usersRouter)
 
 apiRouter
 .route("/")
-.get(getOverview)
+.get(getApi)
 
 
 module.exports = apiRouter;
