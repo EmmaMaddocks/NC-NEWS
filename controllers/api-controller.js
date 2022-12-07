@@ -106,8 +106,30 @@ exports.getApi = (req, res, next) => {
             "DELETE /api/comments/:comment_id": {
               "description": "deletes the comment associated with the passed comment_id and returns a 204 status code with no response body",
               "queries": []
+            },   
+          "GET /api/users/:username": {
+            "description": "serves an object containing the given username properties",
+            "queries": [],
+            "exampleResponse": {
+              "user": {
+                "username": "jessjelly",
+                "avatar_url": "https://s-media-cache-ak0.pinimg.com/564x/39/62/ec/3962eca164e60cf46f979c1f57d4078b.jpg",
+                "name": "Jess Jelly"
+              }
             }
-          }
-          
-    });
-};          
+          },
+          "POST /api/articles": {
+            "description": "post a new article when passed a valid article object",
+            "queries": [],
+            "exampleResponse": {
+              "status": 204
+            },
+        },
+        "DELETE /api/articles/:article_id": {
+          "description": "deletes the article associated with the passed article_id and returns a 204 status code with no response body",
+          "queries": []
+        },   
+    }
+  }
+  )};
+    
