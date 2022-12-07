@@ -514,3 +514,23 @@ describe('returns api', () => {
       .expect(204);
 		});
   })
+
+
+
+
+  describe("/users", () => {
+    test("GETS a status code of 200 when a valid username is passed as a parameter in the path", () => {
+      let username = 'butter_bridge'
+      return request(app)
+      .get(`/api/users/${username}`)
+      // .expect(200)
+      .then(({body}) => {
+        let user = body;
+          expect(user).toEqual(
+            [{"avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+            "name": "jonny",
+            "username": "butter_bridge"}]
+          )  
+          })
+      })
+  })
