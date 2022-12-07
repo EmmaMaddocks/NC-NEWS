@@ -126,3 +126,15 @@ exports.publishComment = async (author, body, id) => {
   );
   return comment.rows[0];
 };
+
+
+exports.publishArticle = async (title, topic, author, body) => {
+  const article = await db.query(
+    `INSERT INTO articles (title, topic, author, body)
+        VALUES ($1, $2, $3, $4)
+        RETURNING *;`,
+    [title, topic, author, body]
+  );
+  return article.rows[0];
+
+};

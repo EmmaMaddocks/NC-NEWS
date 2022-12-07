@@ -482,3 +482,28 @@ describe('returns api', () => {
       });
     });
   })
+
+  describe("POST /api/articles", () => {
+    test("Request body takes a user and body and returns the posted article", () => {
+      const newArticle = {
+        title: "This is a new article",
+        body: "This is the body of the new article",
+        topic: "cats",
+        author: "lurker",
+
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        // .expect(201)
+        .then(res => {
+          expect(res.body.article).toEqual({
+            ...newArticle,
+            article_id: 13,
+            votes: 0,
+            created_at: expect.any(String)
+          });
+        });
+    });
+  })
+  

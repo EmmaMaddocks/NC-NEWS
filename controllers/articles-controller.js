@@ -4,6 +4,7 @@ const {
     getUpdatedVotes,
     getAllComments,
     publishComment,
+    publishArticle
   } = require("../models/articles-model");
   
   const { checkExists } = require("../db/seeds/utils");
@@ -65,3 +66,15 @@ const {
       })
       .catch(next);
   };
+
+  exports.postArticle = (req, res, next) => {
+    console.log(req.body);
+    let  { title, topic, author, body } = req.body;
+    publishArticle(title, topic, author, body )
+    .then(article => {
+      res.status(201).send({ article });
+    })
+    .catch(err => {
+      next(err);
+    });
+};

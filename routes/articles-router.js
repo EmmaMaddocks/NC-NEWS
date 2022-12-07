@@ -6,6 +6,7 @@ const {
   fetchArticleById,
   postComment,
   fetchComments,
+  postArticle
 } = require("../controllers/articles-controller");
 
 articlesRouter
@@ -13,11 +14,17 @@ articlesRouter
   .get(fetchComments)
   .post(postComment);
 
+  // articlesRouter
+  // .route("/articles")
+  // .post(postArticle);
+
 articlesRouter
   .route("/:article_id")
   .get(fetchArticleById)
   .patch(fetchUpdatedVotes);
 
-articlesRouter.route("/").get(fetchAllArticles);
+articlesRouter.route("/")
+.get(fetchAllArticles)
+.post(postArticle);
 
 module.exports = articlesRouter;
