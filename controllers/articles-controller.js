@@ -4,7 +4,8 @@ const {
     getUpdatedVotes,
     getAllComments,
     publishComment,
-    publishArticle
+    publishArticle,
+    removeArticle
   } = require("../models/articles-model");
   
   const { checkExists } = require("../db/seeds/utils");
@@ -68,7 +69,7 @@ const {
   };
 
   exports.postArticle = (req, res, next) => {
-    console.log(req.body);
+
     let  { title, topic, author, body } = req.body;
     publishArticle(title, topic, author, body )
     .then(article => {
@@ -77,4 +78,14 @@ const {
     .catch(err => {
       next(err);
     });
+};
+
+exports.deleteArticle = (req, res, next) => {
+  let { article_id } = req.params;
+
+  removeArticle(article_id)
+    .then(() => {
+      res.sendStatus(204);
+    })
+    .catch(next);
 };

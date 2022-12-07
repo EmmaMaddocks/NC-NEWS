@@ -490,7 +490,6 @@ describe('returns api', () => {
         body: "This is the body of the new article",
         topic: "cats",
         author: "lurker",
-
       };
       return request(app)
         .post("/api/articles")
@@ -507,3 +506,11 @@ describe('returns api', () => {
     });
   })
   
+
+  describe('/api/articles/:article_id', () => {
+		test('204: deletes article associated with passed article_id and returns no content', () => {
+			return request(app)
+      .delete('/api/articles/2')
+      .expect(204);
+		});
+  })

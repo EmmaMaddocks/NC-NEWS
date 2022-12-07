@@ -138,3 +138,18 @@ exports.publishArticle = async (title, topic, author, body) => {
   return article.rows[0];
 
 };
+
+exports.removeArticle = (article_id) => {
+  return db
+    .query(
+      `DELETE FROM articles
+              WHERE article_id = $1;`,
+      [article_id]
+    )
+    .then((results) => {
+      if (!results.rowCount) {
+        return checkExists("articles", "article_id", article_id);
+      }
+      return results.rows;
+    });
+};
