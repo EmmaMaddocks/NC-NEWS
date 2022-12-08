@@ -128,7 +128,7 @@ exports.getApi = (req, res, next) => {
         "DELETE /api/articles/:article_id": {
           "description": "deletes the article associated with the passed article_id and returns a 204 status code with no response body",
           "queries": []
-        },   
+        }
     }
   }
   )};

@@ -104,6 +104,8 @@ module.exports = [
     body: "Jose Mourinho was at The O2 on Sunday night to watch Dominic Thiem in action against Novak Djokovic. Thiem took the first set before Djokovic fought back to claim the victory, but Manchester United's manager was clearly impressed with the Austrian's performance.",
     created_at: 1594239900000,
     votes: 0,
+    img_url: 'https://i.hurimg.com/i/hdn/75/0x0/5dd51b847af50722f0ab0a75.jpg',
+
   },
   {
     title: "Who Will Manage Your Club in 2021?",
@@ -120,6 +122,8 @@ module.exports = [
     body: "When Roy Hodgson resigned after this summer’s debacle, the England managerial merry go-round set into motion raising hopes that change would improve the nations fortunes.  In came Sam Allardyce but the same old squad was announced – apart from Michail Antonio – resulting in a similar type performance that was customary this summer. I was an advocate of Big Sam’s appointment because of the fact he managed down the league and could see that talent lay beyond just the big clubs in the country. Roy had many faults but the biggest frustration for me was he failed to utilise an already diminished pool of English players by continuing to pick the so called elite players – who are all tainted with failure. To be fair to Allardyce his first England game came so early in the season that it made making whole sale changes difficult. We shall never know if he would have picked different players. Since he left the job it was up to Gareth Southgate to take on the mantle and again hope arose that he may start to pick some of the talented under 21s that he has worked with over the last five years.",
     created_at: 1584576840000,
     votes: 0,
+    img_url: 'https://media.gq.com/photos/5b4629a2e3f5e30b9728ba38/master/pass/Gareth-Southgate-Waistcoat-GQ-2018-071118.jpg',
+
   },
   {
     title: "History of FC Barcelona",
@@ -249,6 +253,8 @@ module.exports = [
     body: "Good morning. Here’s the plan for the week, not including breakfast because I’m on a farina kick and that’s not to everyone’s taste, and not including lunch because really when it comes to the midday hours you should get out of the office or the house and walk around. If you get something to eat, great, but the most important thing is to be outside where the stories are. There’s nothing happening at your desk but a screen. Anyway! I’m thinking chicken paprikash for dinner tonight, a nod toward the coming fall, served over buttery egg noodles, with green beans on the side. If you have the time, make an apple cake for dessert.",
     created_at: 1591672740000,
     votes: 0,
+    img_url: 'https://assets.epicurious.com/photos/55f72d733c346243461d496e/5:4/w_3140,h_2512,c_limit/09112015_15minute_pastasauce_tomato.jpg',
+
   },
   {
     title: "Halal food: Keeping pure and true",
@@ -257,6 +263,8 @@ module.exports = [
     body: "CHINA’S cities abound with restaurants and food stalls catering to Muslims as well as to the many other Chinese who relish the distinctive cuisines for which the country’s Muslims are renowned. So popular are kebabs cooked by Muslim Uighurs on the streets of Beijing that the city banned outdoor grills in 2014 in order to reduce smoke, which officials said was exacerbating the capital’s notorious smog (the air today is hardly less noxious). Often such food is claimed to be qing zhen, meaning 'pure and true', or halal, prepared according to traditional Islamic regulations. But who can tell? Last year angry Muslims besieged a halal bakery in Xining, the capital of Qinghai province, after pork sausages were found in the shop’s delivery van. There have been several scandals in recent years involving rat meat or pork being sold as lamb. These have spread Muslim mistrust of domestically produced halal products.",
     created_at: 1592514480000,
     votes: 0,
+    img_url: 'https://media.gq.com/photos/5b4629a2e3f5e30b9728ba38/master/pass/Gareth-Southgate-Waistcoat-GQ-2018-071118.jpg',
+
   },
   {
     title: "Seafood substitutions are increasing",
@@ -273,6 +281,8 @@ module.exports = [
     body: "The 'umami' craze has turned a much-maligned and misunderstood food additive into an object of obsession for the world’s most innovative chefs. But secret ingredient monosodium glutamate’s biggest secret may be that there was never anything wrong with it at all.",
     created_at: 1606043580000,
     votes: 0,
+    img_url: 'https://health.clevelandclinic.org/wp-content/uploads/sites/3/2022/01/MSGIsItBadForYou-1204378999-770x533-1-650x428.jpg',
+
   },
   {
     title: "Stone Soup",
